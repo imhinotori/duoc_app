@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -18,8 +17,9 @@ class DuocRequest {
   static Future<Map<String, dynamic>> postLoginRequest(
       String email, String password) async {
     try {
-      http.Response response = await http.post(Uri.parse('$_baseUri/auth'),
-          body: {"username": email, "password": password});
+      http.Response response = await http.post(Uri.parse('$_baseUri/login'),
+          body: json.encode({"username": email, "password": password}),
+          headers: {"Content-Type": "application/json"});
 
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
@@ -49,7 +49,6 @@ class DuocRequest {
       http.Response response = await http.get(Uri.parse('$_baseUri/schedule'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       List<dynamic> jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
       return jsonResponse;
     } catch (exception) {
       throw Exception("Error trying to connect to API: $exception");
@@ -84,14 +83,14 @@ class DuocRequest {
 
   static Future<String> getAccessToken() async {
     String? accessToken = await storage.read(key: "access_token");
-    String? refreshToken = await storage.read(key: "refresh_token");
+    //String? refreshToken = await storage.read(key: "refresh_token");
 
-    if (accessToken == null || refreshToken == null) {
+    if (accessToken == null) {
+      //refreshToken == null) {
       throw WrongUserAuthException("Access or Refresh token is null");
     }
 
     if (!JwtDecoder.isExpired(accessToken)) {
-      debugPrint("Using old token");
       return accessToken;
     }
     /*else if (!JwtDecoder.isExpired(refreshToken)) {
@@ -121,5 +120,9 @@ class DuocRequest {
       }
     }*/
     throw WrongUserAuthException("User tokens are invalid");
+  }
+
+  static void cleanTokens() async {
+    storage.deleteAll();
   }
 }

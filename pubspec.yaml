@@ -41,6 +41,10 @@ dependencies:
   jwt_decoder: ^2.0.1
   intl: ^0.19.0
   shared_preferences: ^2.2.2
+  barcode: ^2.2.6
+  barcode_widget: ^2.0.4
+  flutter_svg: ^2.0.10+1
+  flutter_emoji: ^2.5.1
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +64,7 @@ dev_dependencies:
 flutter:
 
   assets:
+    - assets/svg/
     - assets/images/
 
   # The following line ensures that the Material Icons font is

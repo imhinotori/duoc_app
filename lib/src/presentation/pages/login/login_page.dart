@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../modules/duoc_requests.dart';
+import '../../../theme/theme_constants.dart';
 import '../home/home_page.dart';
 
 final emailController = TextEditingController();
@@ -32,71 +33,85 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B2C44),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Expanded(
-              child: Center(
-                child: Image(
-                  image: AssetImage('assets/images/logo.png'),
-                ),
-              ),
+      backgroundColor: ToriColor.secondary,
+      body: Stack(children: [
+        Positioned(
+          bottom: 410,
+          left: 130,
+          child: Container(
+            height: 600,
+            width: 600,
+            decoration: const BoxDecoration(
+              color: ToriColor.main,
+              shape: BoxShape.circle,
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Text(
-                      "¡Hola!",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-                    ),
-                    Visibility(
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      visible: loginError,
-                      child: const Text(
-                        "Revisa tus credenciales",
-                        style:
-                            TextStyle(color: Color(0xFFE32E2E), fontSize: 16),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: CredentialsGroup(loginError: loginError),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Recuperar contraseña",
-                          style: const TextStyle(fontSize: 16),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: FractionallySizedBox(
-                        widthFactor: 1,
-                        child: LoginButton(
-                          onLoginError: onLoginError,
-                        ),
-                      ),
-                    )
-                  ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Expanded(
+                child: Center(
+                  child: Image(
+                    image: AssetImage('assets/images/logo.png'),
+                  ),
                 ),
               ),
-            )
-          ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Text(
+                        "¡Hola! 👋",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 32),
+                      ),
+                      Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: loginError,
+                        child: const Text(
+                          "Revisa tus credenciales",
+                          style:
+                              TextStyle(color: ToriColor.error, fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: CredentialsGroup(loginError: loginError),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Recuperar contraseña",
+                            style: const TextStyle(fontSize: 16),
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: FractionallySizedBox(
+                          widthFactor: 1,
+                          child: LoginButton(
+                            onLoginError: onLoginError,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
+      ]),
     );
   }
 }
@@ -118,15 +133,12 @@ class CredentialsGroup extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10, bottom: 30),
             child: LoginInput(
               hintText: "Correo Electronico",
-              hintTextColor: loginError
-                  ? const Color(0xFFE32E2E)
-                  : const Color(0xFF767676),
+              hintTextColor: loginError ? ToriColor.error : ToriColor.gray,
             ),
           ),
           PasswordInput(
             hintText: "Contraseña",
-            hintTextColor:
-                loginError ? const Color(0xFFE32E2E) : const Color(0xFF767676),
+            hintTextColor: loginError ? ToriColor.error : ToriColor.gray,
           ),
         ],
       ),
@@ -146,12 +158,8 @@ class LoginButton extends StatelessWidget {
     Map<String, dynamic> jsonResponse = await DuocRequest.postLoginRequest(
         emailController.text, passwordController.text);
 
-    if (jsonResponse.containsKey("access_token")) {
-      await storage.write(
-          key: "access_token", value: jsonResponse["access_token"]);
-      await storage.write(
-          key: "refresh_token", value: jsonResponse["refresh_token"]);
-
+    if (jsonResponse.containsKey("token")) {
+      await storage.write(key: "access_token", value: jsonResponse["token"]);
       if (context.mounted) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const HomePage()));
@@ -168,13 +176,12 @@ class LoginButton extends StatelessWidget {
         login(context, onLoginError);
       },
       style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(const Color(0xFFE3AD2E))),
+          backgroundColor: MaterialStateProperty.all<Color>(ToriColor.main)),
       child: const Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: Text(
           "Iniciar Sesión",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: ToriColor.white, fontSize: 20),
         ),
       ),
     );
@@ -193,7 +200,7 @@ class LoginInput extends StatelessWidget {
     return TextField(
       autofillHints: const [AutofillHints.email],
       controller: emailController,
-      style: const TextStyle(color: Colors.black),
+      style: const TextStyle(color: ToriColor.black),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 15),
         border: OutlineInputBorder(
@@ -201,7 +208,7 @@ class LoginInput extends StatelessWidget {
             borderRadius: BorderRadius.circular(15)),
         hintText: hintText,
         hintStyle: TextStyle(color: hintTextColor, fontWeight: FontWeight.w300),
-        fillColor: Colors.white,
+        fillColor: ToriColor.white,
         filled: true,
       ),
     );
@@ -228,7 +235,7 @@ class _PasswordInputState extends State<PasswordInput> {
       autofillHints: const [AutofillHints.password],
       controller: passwordController,
       obscureText: !_passwordVisible,
-      style: const TextStyle(color: Colors.black),
+      style: const TextStyle(color: ToriColor.black),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 15),
         border: OutlineInputBorder(
@@ -259,7 +266,7 @@ class _PasswordInputState extends State<PasswordInput> {
         hintText: widget.hintText,
         hintStyle:
             TextStyle(color: widget.hintTextColor, fontWeight: FontWeight.w300),
-        fillColor: Colors.white,
+        fillColor: ToriColor.white,
         filled: true,
       ),
     );

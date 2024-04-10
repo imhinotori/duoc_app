@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:torilabs_duoc/src/modules/duoc_requests.dart';
 import 'package:torilabs_duoc/src/presentation/pages/home/home_page.dart';
 import 'package:torilabs_duoc/src/presentation/pages/loading/loading_page.dart';
-import 'package:torilabs_duoc/src/presentation/pages/login/login.dart';
+import 'package:torilabs_duoc/src/presentation/pages/login/login_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

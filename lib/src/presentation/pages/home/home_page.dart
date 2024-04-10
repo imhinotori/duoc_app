@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:torilabs_duoc/src/models/user_model.dart';
 import 'package:torilabs_duoc/src/modules/duoc_requests.dart';
 import 'package:torilabs_duoc/src/presentation/pages/home/widgets/home_app_bar.dart';
 import 'package:torilabs_duoc/src/presentation/pages/home/widgets/home_navigation.dart';
@@ -9,6 +8,9 @@ import 'package:torilabs_duoc/src/presentation/pages/home/widgets/next_class_car
 import 'package:torilabs_duoc/src/presentation/pages/home/widgets/profile_drawer.dart';
 import 'package:torilabs_duoc/src/presentation/pages/home/widgets/subject_card.dart';
 import 'package:torilabs_duoc/src/presentation/pages/loading/loading_page.dart';
+
+import '../../../models/user_model.dart';
+import '../../../theme/theme_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           // GMT-3
-          DateTime now = DateTime.now().subtract(const Duration(hours: 3));
+          DateTime now = DateTime.now().subtract(const Duration(hours: 4));
           String day = DateFormat('EEEE').format(now);
           String hour = DateFormat('HH:mm').format(now);
 
@@ -121,9 +123,7 @@ class _HomePageState extends State<HomePage> {
             }
           }
 
-          String firstName = student["full_name"].split(' ')[0].toLowerCase();
-          firstName =
-              firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+          String firstName = student["full_name"].split(' ')[0];
 
           NextClassCard nextClassCard = NextClassCard(
             classroom: classroom,
@@ -131,12 +131,16 @@ class _HomePageState extends State<HomePage> {
             subjectName: subject,
           );
 
-          return ChangeNotifierProvider(
-            create: (context) => UserModel(firstName, student["avatar"]),
-            child: Scaffold(
-              backgroundColor: const Color(0xFFF4F4F4),
-              bottomNavigationBar: const HomeButtonNavigation(),
-              appBar: const HomeAppBar(),
+          return Consumer<UserModel>(builder: (context, model, _) {
+            model.setData(firstName, student["avatar"], student["rut"]);
+            return Scaffold(
+              backgroundColor: ToriColor.white,
+              bottomNavigationBar: const HomeButtonNavigation(
+                currentIndex: 0,
+              ),
+              appBar: const HomeAppBar(
+                inverted: false,
+              ),
               body: Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Stack(
@@ -163,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text(
                               "Ramos",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: ToriColor.white,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -183,8 +187,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               endDrawer: const ProfileDrawer(),
-            ),
-          );
+            );
+          });
         }
       },
     );

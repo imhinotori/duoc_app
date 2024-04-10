@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:torilabs_duoc/src/theme/theme_constants.dart';
 
 class NextClassCard extends StatelessWidget {
   const NextClassCard({
@@ -22,7 +23,7 @@ class NextClassCard extends StatelessWidget {
         )
       ]),
       child: Card(
-        color: Colors.white,
+        color: ToriColor.white,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -35,7 +36,7 @@ class NextClassCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE3AD2E),
+                        color: ToriColor.main,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Padding(
@@ -61,14 +62,14 @@ class NextClassCard extends StatelessWidget {
               const Text(
                 "Tu siguiente clase:",
                 style: TextStyle(
-                    color: Color(0xFF939393),
+                    color: ToriColor.gray,
                     fontSize: 14,
                     fontWeight: FontWeight.w300),
               ),
               Text(
                 subjectName,
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: ToriColor.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),

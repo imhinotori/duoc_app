@@ -1,8 +1,13 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:torilabs_duoc/src/models/preferences_model.dart';
+import 'package:torilabs_duoc/src/modules/duoc_requests.dart';
+import 'package:torilabs_duoc/src/presentation/pages/login/login_page.dart';
 
 import '../../../../models/user_model.dart';
+import '../../../../theme/theme_constants.dart';
 
 class ProfileDrawer extends StatefulWidget {
   const ProfileDrawer({super.key});
@@ -17,7 +22,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
     return FractionallySizedBox(
       widthFactor: 0.85,
       child: (Drawer(
-        backgroundColor: const Color(0xffebebeb),
+        backgroundColor: ToriColor.white,
         child: Padding(
           padding:
               const EdgeInsets.only(left: 10, right: 10, top: 80, bottom: 10),
@@ -42,7 +47,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                     return Text(
                       userModel.firstName,
                       style: const TextStyle(
-                          color: Colors.black,
+                          color: ToriColor.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     );
@@ -94,22 +99,47 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   ),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.door_front_door_outlined,
-                    color: Colors.black,
+                    color: ToriColor.black,
                   ),
                   Expanded(
-                    child: Text(
-                      "Cerrar Sesión",
-                      style: TextStyle(color: Colors.black),
+                    child: InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            BuildContext dialogContext = context;
+                            return LogoutCard(dialogContext: dialogContext);
+                          },
+                        );
+                      },
+                      child: const Text(
+                        "Cerrar Sesión",
+                        style: TextStyle(color: ToriColor.black),
+                      ),
                     ),
                   ),
-                  Text(
-                    "Made with love by ToriLabs",
-                    style: TextStyle(color: Colors.black),
+                  Column(
+                    children: [
+                      const Text(
+                        "Made with ❤️ by ",
+                        style:
+                            TextStyle(color: Color(0x88000000), fontSize: 12),
+                      ),
+                      SvgPicture.asset(
+                        'assets/svg/tori_logo.svg',
+                        width: 60,
+                        height: 65,
+                        colorFilter: const ColorFilter.mode(
+                          Color(0x88000000),
+                          BlendMode.srcIn,
+                        ),
+                      )
+                    ],
                   )
                 ],
               )
@@ -117,6 +147,112 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
           ),
         ),
       )),
+    );
+  }
+}
+
+class LogoutCard extends StatelessWidget {
+  const LogoutCard({
+    super.key,
+    required this.dialogContext,
+  });
+
+  final BuildContext dialogContext;
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      widthFactor: 0.9,
+      heightFactor: 0.18,
+      child: Card(
+        color: ToriColor.white,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 15.0, 16.0, 1.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ToriColor.error,
+                        borderRadius: BorderRadius.circular(15.0)),
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                          top: 6.0, bottom: 10.0, left: 8.0, right: 8.0),
+                      child: Icon(Icons.warning_rounded, size: 40),
+                    ),
+                  ),
+                  RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        color: ToriColor.black,
+                        fontSize: 16,
+                      ),
+                      text: "Cerrar Sesión",
+                      children: [
+                        TextSpan(
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w300),
+                            text: "\n¿Estás segur@ que quieres cerrar sesión?")
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 15.0),
+                        backgroundColor: ToriColor.error,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        DuocRequest.cleanTokens();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (route) => false);
+                      },
+                      child: const Text(
+                        "Cerrar Sesión",
+                        style: TextStyle(color: ToriColor.white, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  OutlinedButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 15.0),
+                        backgroundColor: ToriColor.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                      },
+                      child: const Text(
+                        "Cancelar",
+                        style: TextStyle(fontSize: 14, color: ToriColor.black),
+                      ))
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -132,7 +268,7 @@ class CustomDivider extends StatelessWidget {
         opacity: 0.17,
         child: Divider(
           thickness: 0.5,
-          color: Colors.black,
+          color: ToriColor.black,
         ),
       ),
     );
@@ -156,7 +292,7 @@ class CustomRow extends StatelessWidget {
             flex: 1,
             child: Icon(
               icon,
-              color: const Color(0xff767676),
+              color: ToriColor.gray,
             ),
           ),
           Flexible(
@@ -164,7 +300,7 @@ class CustomRow extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                color: Color(0xff767676),
+                color: ToriColor.gray,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -199,7 +335,7 @@ class SwitchDivider extends StatelessWidget {
             flex: 1,
             child: Icon(
               icon,
-              color: const Color(0xff767676),
+              color: ToriColor.gray,
             ),
           ),
           Expanded(
@@ -207,7 +343,7 @@ class SwitchDivider extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                color: Color(0xff767676),
+                color: ToriColor.gray,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -248,10 +384,10 @@ class _SwitchButtonState extends State<SwitchButton> {
       builder: (BuildContext context, PreferencesModel preferences, _) {
         return Switch(
           value: widget.getSwitchCallback(preferences),
-          activeColor: Colors.white,
-          activeTrackColor: const Color(0xFFE3AD2E),
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color(0xff0b2c44),
+          activeColor: ToriColor.white,
+          activeTrackColor: ToriColor.main,
+          inactiveThumbColor: ToriColor.white,
+          inactiveTrackColor: ToriColor.secondary,
           onChanged: (bool value) {
             setState(() {
               light = value;
@@ -272,20 +408,49 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (_) => FractionallySizedBox(
-              widthFactor: 0.5,
-              heightFactor: 0.5,
-              child: Container(
-                color: Colors.blue,
-                child: const Icon(Icons.qr_code_2_outlined),
+    return Consumer<UserModel>(builder: (context, user, _) {
+      return InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (_) => FractionallySizedBox(
+                widthFactor: 0.9,
+                heightFactor: 0.3,
+                child: Card(
+                  color: ToriColor.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BarcodeWidget(
+                          barcode: Barcode.code128(),
+                          height: 65,
+                          drawText: false,
+                          data: user.rut,
+                          color: ToriColor.black,
+                        ),
+                        const Icon(
+                          Icons.info,
+                          color: ToriColor.black,
+                          size: 32,
+                        ),
+                        RichText(
+                          text: const TextSpan(
+                              style: TextStyle(
+                                  color: ToriColor.black, fontSize: 12),
+                              text:
+                                  "Este código podría ser solicitado en el ingreso a la sede o la biblioteca."),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          );
-        },
-        child: CustomRow(icon: icon, text: text));
+            );
+          },
+          child: CustomRow(icon: icon, text: text));
+    });
   }
 }
