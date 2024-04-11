@@ -35,15 +35,14 @@ class _SubjectPageState extends State<SubjectPage> {
       if (subject["name"] != widget.subjectName) continue;
       return subject;
     }
-
-    return {};
+    return {"details": [], "percentage": "N/A"};
   }
 
   List<Widget> getGradeWidgets(Map<String, dynamic> gradesData) {
     List<Widget> cards = [];
     for (var grade in gradesData["partials"]) {
       Widget card = BlueCard(
-        text: grade,
+        text: grade.toString(),
         horizontalPadding: 18,
         verticalPadding: 18,
         fontSize: 24,
@@ -240,7 +239,8 @@ class _SubjectPageState extends State<SubjectPage> {
                           builder: (context, snapshot) {
                             String text = "";
                             if (snapshot.hasData) {
-                              text = "${snapshot.data!["percentage"]}%";
+                              text = "${snapshot.data!["percentage"]}";
+                              if (text != "N/A") text += "%";
                             }
                             return BlueCard(
                               text: text,

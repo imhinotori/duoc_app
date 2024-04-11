@@ -34,84 +34,70 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ToriColor.secondary,
-      body: Stack(children: [
-        Positioned(
-          bottom: 410,
-          left: 130,
-          child: Container(
-            height: 600,
-            width: 600,
-            decoration: const BoxDecoration(
-              color: ToriColor.main,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Expanded(
-                child: Center(
-                  child: Image(
-                    image: AssetImage('assets/images/logo.png'),
-                  ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Expanded(
+              child: Center(
+                child: Image(
+                  image: AssetImage('assets/images/logo.png'),
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const Text(
-                        "¡Hola! 👋",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 32),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Text(
+                      "¡Hola! 👋",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                    ),
+                    Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: loginError,
+                      child: const Text(
+                        "Revisa tus credenciales",
+                        style: TextStyle(color: ToriColor.error, fontSize: 16),
                       ),
-                      Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: loginError,
-                        child: const Text(
-                          "Revisa tus credenciales",
-                          style:
-                              TextStyle(color: ToriColor.error, fontSize: 16),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: CredentialsGroup(loginError: loginError),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Recuperar contraseña",
+                          style: const TextStyle(
+                              fontSize: 16, color: ToriColor.white),
+                          recognizer: TapGestureRecognizer()..onTap = () {},
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: CredentialsGroup(loginError: loginError),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Recuperar contraseña",
-                            style: const TextStyle(fontSize: 16),
-                            recognizer: TapGestureRecognizer()..onTap = () {},
-                          ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: FractionallySizedBox(
+                        widthFactor: 1,
+                        child: LoginButton(
+                          onLoginError: onLoginError,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: FractionallySizedBox(
-                          widthFactor: 1,
-                          child: LoginButton(
-                            onLoginError: onLoginError,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-      ]),
+      ),
     );
   }
 }

@@ -11,15 +11,15 @@ class WrongUserAuthException implements Exception {
 }
 
 class DuocRequest {
-  static const String _baseUri = 'https://duoc.hinotori.moe';
+  static const String _baseUri = 'duoc.hinotori.moe';
   static const FlutterSecureStorage storage = FlutterSecureStorage();
 
   static Future<Map<String, dynamic>> postLoginRequest(
       String email, String password) async {
     try {
-      http.Response response = await http.post(Uri.parse('$_baseUri/login'),
+      http.Response response = await http.post(Uri.https(_baseUri, 'login'),
           body: json.encode({"username": email, "password": password}),
-          headers: {"Content-Type": "application/json"});
+          headers: {"Content-Type": "application/json", 'Accept': '*/*'});
 
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
@@ -33,7 +33,7 @@ class DuocRequest {
     String accessToken = await getAccessToken();
 
     try {
-      http.Response response = await http.get(Uri.parse('$_baseUri/student'),
+      http.Response response = await http.get(Uri.https(_baseUri, 'student'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse;
@@ -46,7 +46,7 @@ class DuocRequest {
     String accessToken = await getAccessToken();
 
     try {
-      http.Response response = await http.get(Uri.parse('$_baseUri/schedule'),
+      http.Response response = await http.get(Uri.https(_baseUri, 'schedule'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse;
@@ -59,11 +59,14 @@ class DuocRequest {
     String accessToken = await getAccessToken();
 
     try {
-      http.Response response = await http.get(Uri.parse('$_baseUri/attendance'),
+      http.Response response = await http.get(Uri.https(_baseUri, 'attendance'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse;
     } catch (exception) {
+      http.Response response = await http.get(Uri.https(_baseUri, 'attendance'),
+          headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
+      Map<String, dynamic> data = jsonDecode(response.body);
       throw Exception("Error trying to connect to API: $exception");
     }
   }
@@ -72,7 +75,7 @@ class DuocRequest {
     String accessToken = await getAccessToken();
 
     try {
-      http.Response response = await http.get(Uri.parse('$_baseUri/grades'),
+      http.Response response = await http.get(Uri.https(_baseUri, 'grades'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
       List<dynamic> jsonResponse = jsonDecode(response.body);
       return jsonResponse;
