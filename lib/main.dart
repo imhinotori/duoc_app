@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +10,20 @@ import 'package:torilabs_duoc/src/presentation/pages/auth/auth_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-      create: (context) => PreferencesModel(sharedPreferences),
-    ),
-    ChangeNotifierProvider(
-      create: (context) => UserModel(),
-    ),
-  ], child: const MyApp()));
+  runApp(DevicePreview(
+    enabled: true,
+    tools: const [
+      ...DevicePreview.defaultTools,
+      ],
+    builder: (context)  => MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context) => PreferencesModel(sharedPreferences),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserModel(),
+      ),
+    ], child: const MyApp()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
