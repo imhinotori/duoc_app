@@ -144,8 +144,9 @@ class LoginButton extends StatelessWidget {
     Map<String, dynamic> jsonResponse = await DuocRequest.postLoginRequest(
         emailController.text, passwordController.text);
 
-    if (jsonResponse.containsKey("token")) {
-      await storage.write(key: "access_token", value: jsonResponse["token"]);
+    if (jsonResponse.containsKey("access_token")) {
+      await storage.write(
+          key: "access_token", value: jsonResponse["access_token"]);
       if (context.mounted) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const HomePage()));

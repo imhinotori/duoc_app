@@ -17,11 +17,12 @@ class DuocRequest {
   static Future<Map<String, dynamic>> postLoginRequest(
       String email, String password) async {
     try {
-      http.Response response = await http.post(Uri.https(_baseUri, 'login'),
+      http.Response response = await http.post(Uri.https(_baseUri, 'auth'),
           body: json.encode({"username": email, "password": password}),
           headers: {"Content-Type": "application/json", 'Accept': '*/*'});
 
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
 
       return jsonResponse;
     } catch (exception) {
@@ -35,7 +36,8 @@ class DuocRequest {
     try {
       http.Response response = await http.get(Uri.https(_baseUri, 'student'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      Map<String, dynamic> jsonResponse =
+          jsonDecode(utf8.decode(response.bodyBytes));
       return jsonResponse;
     } catch (exception) {
       throw Exception("Error trying to connect to API: $exception");
@@ -48,7 +50,8 @@ class DuocRequest {
     try {
       http.Response response = await http.get(Uri.https(_baseUri, 'schedule'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonResponse;
     } catch (exception) {
       throw Exception("Error trying to connect to API: $exception");
@@ -61,12 +64,9 @@ class DuocRequest {
     try {
       http.Response response = await http.get(Uri.https(_baseUri, 'attendance'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonResponse;
     } catch (exception) {
-      http.Response response = await http.get(Uri.https(_baseUri, 'attendance'),
-          headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-      Map<String, dynamic> data = jsonDecode(response.body);
       throw Exception("Error trying to connect to API: $exception");
     }
   }
@@ -77,7 +77,7 @@ class DuocRequest {
     try {
       http.Response response = await http.get(Uri.https(_baseUri, 'grades'),
           headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"});
-      List<dynamic> jsonResponse = jsonDecode(response.body);
+      List<dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
       return jsonResponse;
     } catch (exception) {
       throw Exception("Error trying to connect to API: $exception");
@@ -105,7 +105,7 @@ class DuocRequest {
             Uri.parse('$_baseUri/auth/refresh'),
             headers: {HttpHeaders.authorizationHeader: "Bearer $accessToken"},
             body: {"refresh_token": refreshToken});
-        Map<String, String> jsonResponse = jsonDecode(response.body);
+        Map<String, String> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
 
         if (response.statusCode == 200) {
           await storage.write(
