@@ -149,7 +149,7 @@ Project Link: [https://github.com/imhinotori/duoc_app](https://github.com/imhino
 [issues-shield]: https://img.shields.io/github/issues/imhinotori/duoc_app.svg?style=for-the-badge
 [issues-url]: https://github.com/imhinotori/duoc_app/issues
 [license-shield]: https://img.shields.io/github/license/imhinotori/duoc_app.svg?style=for-the-badge
-[license-url]: https://github.com/imhinotori/duoc_app/blob/master/LICENSE.txt
+[license-url]: https://github.com/imhinotori/duoc_app/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: demo.png
