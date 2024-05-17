@@ -132,7 +132,7 @@ Project Link: [https://github.com/imhinotori/duoc_app](https://github.com/imhino
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* [Juaquin Uribe](https://github.com/frocoa) This project wouldn't be possible without him ❤️
+* [Joaquín Uribe](https://github.com/frocoa) This project wouldn't be possible without him ❤️
 * [Duoc UC](https://www.duoc.cl/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
